@@ -19,32 +19,19 @@ import SpeakIcon from "../icons/speak.svg";
 import SpeakStopIcon from "../icons/speak-stop.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import LoadingButtonIcon from "../icons/loading.svg";
-import PromptIcon from "../icons/prompt.svg";
-import MaskIcon from "../icons/mask.svg";
 import MaxIcon from "../icons/max.svg";
 import MinIcon from "../icons/min.svg";
 import ResetIcon from "../icons/reload.svg";
-import BreakIcon from "../icons/break.svg";
-import SettingsIcon from "../icons/chat-settings.svg";
 import DeleteIcon from "../icons/clear.svg";
 import PinIcon from "../icons/pin.svg";
 import EditIcon from "../icons/rename.svg";
 import ConfirmIcon from "../icons/confirm.svg";
 import CloseIcon from "../icons/close.svg";
 import CancelIcon from "../icons/cancel.svg";
-import ImageIcon from "../icons/image.svg";
 
-import LightIcon from "../icons/light.svg";
-import DarkIcon from "../icons/dark.svg";
-import AutoIcon from "../icons/auto.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 import RobotIcon from "../icons/robot.svg";
-import SizeIcon from "../icons/size.svg";
-import QualityIcon from "../icons/hd.svg";
-import StyleIcon from "../icons/palette.svg";
-import PluginIcon from "../icons/plugin.svg";
-import ShortcutkeyIcon from "../icons/shortcutkey.svg";
 import ReloadIcon from "../icons/reload.svg";
 
 import {
@@ -57,7 +44,6 @@ import {
   Theme,
   useAppConfig,
   DEFAULT_TOPIC,
-  ModelType,
   usePluginStore,
 } from "../store";
 
@@ -69,8 +55,6 @@ import {
   getMessageTextContent,
   getMessageImages,
   isVisionModel,
-  isDalle3,
-  showPlugins,
   safeLocalStorage,
 } from "../utils";
 
@@ -90,7 +74,6 @@ import {
   List,
   ListItem,
   Modal,
-  Selector,
   showConfirm,
   showPrompt,
   showToast,
@@ -565,7 +548,7 @@ export function ChatActions(props: {
           icon={<BottomIcon />}
         />
       )}
-      {props.hitBottom && (
+      {/* {props.hitBottom && (
         <ChatAction
           onClick={props.showPromptModal}
           text={Locale.Chat.InputActions.Settings}
@@ -623,7 +606,7 @@ export function ChatActions(props: {
             }
           });
         }}
-      />
+      /> */}
 
       <ChatAction
         onClick={() => setShowModelSelector(true)}
@@ -631,15 +614,14 @@ export function ChatActions(props: {
         icon={<RobotIcon />}
       />
 
-      {showModelSelector && (
+      {/* {showModelSelector && (
         <Selector
           defaultSelectedValue={`${currentModel}@${currentProviderName}`}
           items={models.map((m) => ({
-            title: `${m.displayName}${
-              m?.provider?.providerName
-                ? " (" + m?.provider?.providerName + ")"
-                : ""
-            }`,
+            title: `${m.displayName}${m?.provider?.providerName
+              ? " (" + m?.provider?.providerName + ")"
+              : ""
+              }`,
             value: `${m.name}@${m?.provider?.providerName}`,
           }))}
           onClose={() => setShowModelSelector(false)}
@@ -782,7 +764,7 @@ export function ChatActions(props: {
           text={Locale.Chat.ShortcutKey.Title}
           icon={<ShortcutkeyIcon />}
         />
-      )}
+      )} */}
     </div>
   );
 }
