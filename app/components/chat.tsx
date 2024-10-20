@@ -32,6 +32,9 @@ import CancelIcon from "../icons/cancel.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 import RobotIcon from "../icons/robot.svg";
+import SizeIcon from "../icons/size.svg";
+import QualityIcon from "../icons/hd.svg";
+import StyleIcon from "../icons/palette.svg";
 import ReloadIcon from "../icons/reload.svg";
 
 import {
@@ -44,6 +47,7 @@ import {
   Theme,
   useAppConfig,
   DEFAULT_TOPIC,
+  ModelType,
   usePluginStore,
 } from "../store";
 
@@ -55,6 +59,7 @@ import {
   getMessageTextContent,
   getMessageImages,
   isVisionModel,
+  isDalle3,
   safeLocalStorage,
 } from "../utils";
 
@@ -74,6 +79,7 @@ import {
   List,
   ListItem,
   Modal,
+  Selector,
   showConfirm,
   showPrompt,
   showToast,
@@ -554,16 +560,16 @@ export function ChatActions(props: {
           text={Locale.Chat.InputActions.Settings}
           icon={<SettingsIcon />}
         />
-      )}
+      )} */}
 
-      {showUploadImage && (
+      {/* {showUploadImage && (
         <ChatAction
           onClick={props.uploadImage}
           text={Locale.Chat.InputActions.UploadImage}
           icon={props.uploading ? <LoadingButtonIcon /> : <ImageIcon />}
         />
-      )}
-      <ChatAction
+      )} */}
+      {/* <ChatAction
         onClick={nextTheme}
         text={Locale.Chat.InputActions.Theme[theme]}
         icon={
@@ -577,23 +583,23 @@ export function ChatActions(props: {
             ) : null}
           </>
         }
-      />
+      /> */}
 
-      <ChatAction
+      {/* <ChatAction
         onClick={props.showPromptHints}
         text={Locale.Chat.InputActions.Prompt}
         icon={<PromptIcon />}
-      />
+      /> */}
 
-      <ChatAction
+      {/* <ChatAction
         onClick={() => {
           navigate(Path.Masks);
         }}
         text={Locale.Chat.InputActions.Masks}
         icon={<MaskIcon />}
-      />
+      /> */}
 
-      <ChatAction
+      {/* <ChatAction
         text={Locale.Chat.InputActions.Clear}
         icon={<BreakIcon />}
         onClick={() => {
@@ -614,14 +620,15 @@ export function ChatActions(props: {
         icon={<RobotIcon />}
       />
 
-      {/* {showModelSelector && (
+      {showModelSelector && (
         <Selector
           defaultSelectedValue={`${currentModel}@${currentProviderName}`}
           items={models.map((m) => ({
-            title: `${m.displayName}${m?.provider?.providerName
-              ? " (" + m?.provider?.providerName + ")"
-              : ""
-              }`,
+            title: `${m.displayName}${
+              m?.provider?.providerName
+                ? " (" + m?.provider?.providerName + ")"
+                : ""
+            }`,
             value: `${m.name}@${m?.provider?.providerName}`,
           }))}
           onClose={() => setShowModelSelector(false)}
@@ -728,7 +735,7 @@ export function ChatActions(props: {
         />
       )}
 
-      {showPlugins(currentProviderName, currentModel) && (
+      {/* {showPlugins(currentProviderName, currentModel) && (
         <ChatAction
           onClick={() => {
             if (pluginStore.getAll().length == 0) {
@@ -740,7 +747,7 @@ export function ChatActions(props: {
           text={Locale.Plugin.Name}
           icon={<PluginIcon />}
         />
-      )}
+      )} */}
       {showPluginSelector && (
         <Selector
           multiple
@@ -758,7 +765,7 @@ export function ChatActions(props: {
         />
       )}
 
-      {!isMobileScreen && (
+      {/* {!isMobileScreen && (
         <ChatAction
           onClick={() => props.setShowShortcutKeyModal(true)}
           text={Locale.Chat.ShortcutKey.Title}

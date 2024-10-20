@@ -11,7 +11,7 @@ const serverConfig = getServerSideConfig();
 
 export const metadata: Metadata = {
   title: "S3DIChat",
-  description: "Your personal ChatGPT Chat Bot.",
+  description: "Give you answers without hallucination.",
   appleWebApp: {
     title: "S3DIChat",
     statusBarStyle: "default",
