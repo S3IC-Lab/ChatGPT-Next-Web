@@ -133,6 +133,7 @@ export enum ModelProvider {
   Hunyuan = "Hunyuan",
   Moonshot = "Moonshot",
   Iflytek = "Iflytek",
+  OurModel = "OurModel",
 }
 
 export const Stability = {

@@ -20,6 +20,7 @@ import { QwenApi } from "./platforms/alibaba";
 import { HunyuanApi } from "./platforms/tencent";
 import { MoonshotApi } from "./platforms/moonshot";
 import { SparkApi } from "./platforms/iflytek";
+import { OurModelApi } from "./platforms/ourModel";
 
 export const ROLES = ["system", "user", "assistant"] as const;
 export type MessageRole = (typeof ROLES)[number];
@@ -126,7 +127,7 @@ interface ChatProvider {
 export class ClientApi {
   public llm: LLMApi;
 
-  constructor(provider: ModelProvider = ModelProvider.GPT) {
+  constructor(provider: ModelProvider = ModelProvider.OurModel) {
     switch (provider) {
       case ModelProvider.GeminiPro:
         this.llm = new GeminiProApi();
@@ -152,8 +153,11 @@ export class ClientApi {
       case ModelProvider.Iflytek:
         this.llm = new SparkApi();
         break;
-      default:
+      case ModelProvider.GPT:
         this.llm = new ChatGPTApi();
+        break;
+      default:
+        this.llm = new OurModelApi();
     }
   }
 
@@ -329,6 +333,6 @@ export function getClientApi(provider: ServiceProvider): ClientApi {
     case ServiceProvider.Iflytek:
       return new ClientApi(ModelProvider.Iflytek);
     default:
-      return new ClientApi(ModelProvider.GPT);
+      return new ClientApi(ModelProvider.OurModel);
   }
 }
