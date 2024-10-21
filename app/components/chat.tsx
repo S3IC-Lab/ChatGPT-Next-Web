@@ -1712,7 +1712,8 @@ function _Chat() {
                         ></IconButton>
                       </div>
                       {isUser ? (
-                        <Avatar avatar={config.avatar} />
+                        // <Avatar avatar={config.avatar} />
+                        <></>
                       ) : (
                         <>
                           {["system"].includes(message.role) ? (
@@ -1923,7 +1924,7 @@ function _Chat() {
             id="chat-input"
             ref={inputRef}
             className={styles["chat-input"]}
-            placeholder={Locale.Chat.Input(submitKey)}
+            // placeholder={Locale.Chat.Input(submitKey)}
             onInput={(e) => onInput(e.currentTarget.value)}
             value={userInput}
             onKeyDown={onInputKeyDown}

@@ -2,7 +2,6 @@
 import { ByteDance } from "@/app/constant";
 
 import { ChatOptions, LLMApi, LLMModel, SpeechOptions } from "../api";
-import axios from "axios";
 
 export interface OpenAIListModelResponse {
   object: string;
@@ -34,24 +33,27 @@ export class OurModelApi implements LLMApi {
   }
 
   async chat(options: ChatOptions) {
-    axios
-      .post(
-        `${this.path(options.config.model)}/completions`,
-        {
-          prompt: options.messages[options.messages.length - 1].content,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      )
-      .then((res) => {
-        options.onFinish(this.extractMessage(res));
-      })
-      .catch((error) => {
-        console.error("error:", error);
-      });
+    setTimeout(() => {
+      options.onFinish("The happiest place on Earth is Disneyland.");
+    }, 1000);
+    // axios
+    //   .post(
+    //     `${this.path(options.config.model)}/completions`,
+    //     {
+    //       prompt: options.messages[options.messages.length - 1].content,
+    //     },
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     },
+    //   )
+    //   .then((res) => {
+    //     options.onFinish(this.extractMessage(res));
+    //   })
+    //   .catch((error) => {
+    //     console.error("error:", error);
+    //   });
   }
 
   async usage() {
