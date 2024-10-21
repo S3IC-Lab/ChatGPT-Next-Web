@@ -20,13 +20,13 @@ interface RequestPayload {
 }
 
 export class OurModelApi implements LLMApi {
-  path(): string {
-    return "http://localhost:8000/v1";
+  path(model: string): string {
+    const models = ["Llama-13B", "Alpaca-13B", "Vicuna-13B", "Llama2-13B"];
+    return `http://localhost:800${models.indexOf(model) + 1}/v1`;
   }
 
   extractMessage(res: any) {
-    // pending
-    return "test";
+    return res.data.completion;
   }
 
   speech(options: SpeechOptions): Promise<ArrayBuffer> {
@@ -34,27 +34,24 @@ export class OurModelApi implements LLMApi {
   }
 
   async chat(options: ChatOptions) {
-    console.log(options.messages);
-
     axios
-      .post(`${this.path}/completions`, {
-        prompt: options.messages[options.messages.length - 1].content,
-        model_type: options.config.model,
-      })
+      .post(
+        `${this.path(options.config.model)}/completions`,
+        {
+          prompt: options.messages[options.messages.length - 1].content,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
       .then((res) => {
         options.onFinish(this.extractMessage(res));
+      })
+      .catch((error) => {
+        console.error("error:", error);
       });
-
-    // test
-    // axios.post("https://jsonplaceholder.typicode.com/posts", {
-    //   "userId": 1,
-    //   "id": 2,
-    //   "title": "qj",
-    //   "body": "sf"
-    // }).then(res => {
-    //   console.log(res);
-    //   options.onFinish("test");
-    // })
   }
 
   async usage() {
