@@ -1,13 +1,8 @@
 "use client";
 import { ByteDance } from "@/app/constant";
 
-import {
-  ChatOptions,
-  LLMApi,
-  LLMModel,
-  MultimodalContent,
-  SpeechOptions,
-} from "../api";
+import { ChatOptions, LLMApi, LLMModel, SpeechOptions } from "../api";
+import axios from "axios";
 
 export interface OpenAIListModelResponse {
   object: string;
@@ -18,40 +13,48 @@ export interface OpenAIListModelResponse {
   }>;
 }
 
+// pending
 interface RequestPayload {
-  messages: {
-    role: "system" | "user" | "assistant";
-    content: string | MultimodalContent[];
-  }[];
-  stream?: boolean;
-  model: string;
-  temperature: number;
-  presence_penalty: number;
-  frequency_penalty: number;
-  top_p: number;
-  max_tokens?: number;
+  prompt: string;
+  model_type: "Llama-13B" | "Alpaca-13B" | "Vicuna-13B" | "Llama2-13B";
 }
 
 export class OurModelApi implements LLMApi {
-  path(path: string): string {
-    // pending
-    return "http://localhost:8888";
+  path(): string {
+    return "http://localhost:8000/v1";
   }
 
   extractMessage(res: any) {
     // pending
-    return res;
+    return "test";
   }
 
   speech(options: SpeechOptions): Promise<ArrayBuffer> {
     throw new Error("Method not implemented.");
   }
 
-  // pending
   async chat(options: ChatOptions) {
-    const fixedResponse = "Method not implemented.";
-    options.onFinish(fixedResponse);
+    axios
+      .post(`${this.path}/completions`, {
+        prompt: options.messages[1].content,
+        model_type: options.config.model,
+      })
+      .then((res) => {
+        options.onFinish(this.extractMessage(res));
+      });
+
+    // test
+    // axios.post("https://jsonplaceholder.typicode.com/posts", {
+    //   "userId": 1,
+    //   "id": 2,
+    //   "title": "qj",
+    //   "body": "sf"
+    // }).then(res => {
+    //   console.log(res);
+    //   options.onFinish("test");
+    // })
   }
+
   async usage() {
     return {
       used: 0,
@@ -63,4 +66,5 @@ export class OurModelApi implements LLMApi {
     return [];
   }
 }
+
 export { ByteDance };
