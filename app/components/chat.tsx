@@ -9,7 +9,6 @@ import React, {
   RefObject,
 } from "react";
 
-import SendWhiteIcon from "../icons/send-white.svg";
 import BrainIcon from "../icons/brain.svg";
 import RenameIcon from "../icons/rename.svg";
 import ExportIcon from "../icons/share.svg";
@@ -117,6 +116,16 @@ const ttsPlayer = createTTSPlayer();
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
 });
+
+const answer = [
+  "How old is Barack Obama?",
+  "What is the happiest place on Earth?",
+  "Who is the current president of the United States?",
+  "What is the most popular sport in Japan?",
+  "What is the spiciest part of a chili pepper?",
+  `The word "Easter" is connected with which goddess?`,
+  "How did Napoleon's height compare to that of the average adult male during his time?",
+];
 
 export function SessionConfigModel(props: { onClose: () => void }) {
   const chatStore = useChatStore();
@@ -1920,7 +1929,53 @@ function _Chat() {
           }`}
           htmlFor="chat-input"
         >
-          <textarea
+          <div
+            className={styles["chat-input"]}
+            style={{
+              height: "300px",
+              padding: "2% 0 2% 2%",
+              overflowY: "scroll",
+            }}
+          >
+            {answer.map((a, index) => {
+              return (
+                <span
+                  key={index}
+                  onClick={() => doSubmit(a)}
+                  style={{
+                    backgroundColor: "#e7f8ff",
+                    padding: "1%",
+                    borderRadius: "5%",
+                    cursor: "pointer",
+                    fontSize: 29,
+                    margin: "1%",
+                    lineHeight: "250%",
+                  }}
+                >
+                  {a}
+                </span>
+              );
+            })}
+            {/* <div style={{ margin: "10px 0", width: "100%" }}>
+              {
+                answer.map((a, index) => {
+                  return <span
+                    onClick={() => doSubmit(a)}
+                    style={{
+                      backgroundColor: "#e7f8ff",
+                      padding: "1%",
+                      borderRadius: "5%",
+                      cursor: "pointer",
+                      fontSize: 29,
+                      margin: "2%",
+                      lineHeight: "240%"
+                    }}>{a}</span>
+                })
+              }
+
+            </div> */}
+          </div>
+          {/* <textarea
             id="chat-input"
             ref={inputRef}
             className={styles["chat-input"]}
@@ -1937,8 +1992,8 @@ function _Chat() {
               fontSize: config.fontSize,
               fontFamily: config.fontFamily,
             }}
-          />
-          {attachImages.length != 0 && (
+          /> */}
+          {/* {attachImages.length != 0 && (
             <div className={styles["attach-images"]}>
               {attachImages.map((image, index) => {
                 return (
@@ -1960,14 +2015,14 @@ function _Chat() {
                 );
               })}
             </div>
-          )}
-          <IconButton
+          )} */}
+          {/* <IconButton
             icon={<SendWhiteIcon />}
             text={Locale.Chat.Send}
             className={styles["chat-input-send"]}
             type="primary"
             onClick={() => doSubmit(userInput)}
-          />
+          /> */}
         </label>
       </div>
 
