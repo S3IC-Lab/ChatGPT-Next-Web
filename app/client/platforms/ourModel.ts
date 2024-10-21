@@ -34,9 +34,11 @@ export class OurModelApi implements LLMApi {
   }
 
   async chat(options: ChatOptions) {
+    console.log(options.messages);
+
     axios
       .post(`${this.path}/completions`, {
-        prompt: options.messages[1].content,
+        prompt: options.messages[options.messages.length - 1].content,
         model_type: options.config.model,
       })
       .then((res) => {
