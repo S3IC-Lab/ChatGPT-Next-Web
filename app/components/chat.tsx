@@ -45,7 +45,6 @@ import {
   useAccessStore,
   Theme,
   useAppConfig,
-  DEFAULT_TOPIC,
   ModelType,
   usePluginStore,
 } from "../store";
@@ -925,6 +924,7 @@ function _Chat() {
   const fontSize = config.fontSize;
   const fontFamily = config.fontFamily;
 
+  const [hovering, setHovering] = useState(-1);
   const [showExport, setShowExport] = useState(false);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -1590,10 +1590,15 @@ function _Chat() {
           <div
             className={`window-header-main-title ${styles["chat-body-main-title"]}`}
             onClickCapture={() => setIsEditingMessage(true)}
+            style={{ fontSize: fontSize }}
           >
-            {!session.topic ? DEFAULT_TOPIC : session.topic}
+            {messages[0].model || session.mask.modelConfig.model}
+            {/* {!session.topic ? DEFAULT_TOPIC : session.topic} */}
           </div>
-          <div className="window-header-sub-title">
+          <div
+            className="window-header-sub-title"
+            style={{ fontSize: fontSize - 9 }}
+          >
             {Locale.Chat.SubTitle(session.messages.length)}
           </div>
         </div>
@@ -1739,7 +1744,10 @@ function _Chat() {
                       )}
                     </div>
                     {!isUser && (
-                      <div className={styles["chat-model-name"]}>
+                      <div
+                        className={styles["chat-model-name"]}
+                        style={{ fontSize: fontSize - 9 }}
+                      >
                         {message.model}
                       </div>
                     )}
@@ -1943,14 +1951,16 @@ function _Chat() {
                   key={index}
                   onClick={() => doSubmit(a)}
                   style={{
-                    backgroundColor: "#e7f8ff",
+                    backgroundColor: hovering === index ? "#d6f3ff" : "#e7f8ff",
                     padding: "1%",
                     borderRadius: "5%",
                     cursor: "pointer",
                     fontSize: 29,
                     margin: "1%",
-                    lineHeight: "250%",
+                    lineHeight: "280%",
                   }}
+                  onMouseEnter={() => setHovering(index)}
+                  onMouseLeave={() => setHovering(-1)}
                 >
                   {a}
                 </span>
