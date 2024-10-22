@@ -14,6 +14,7 @@ import RenameIcon from "../icons/rename.svg";
 import ExportIcon from "../icons/share.svg";
 import ReturnIcon from "../icons/return.svg";
 import CopyIcon from "../icons/copy.svg";
+import DetectIcon from "../icons/detect.svg";
 import SpeakIcon from "../icons/speak.svg";
 import SpeakStopIcon from "../icons/speak-stop.svg";
 import LoadingIcon from "../icons/three-dots.svg";
@@ -30,7 +31,6 @@ import CancelIcon from "../icons/cancel.svg";
 
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
-import RobotIcon from "../icons/robot.svg";
 import SizeIcon from "../icons/size.svg";
 import QualityIcon from "../icons/hd.svg";
 import StyleIcon from "../icons/palette.svg";
@@ -622,11 +622,11 @@ export function ChatActions(props: {
         }}
       /> */}
 
-      <ChatAction
+      {/* <ChatAction
         onClick={() => setShowModelSelector(true)}
         text={currentModelName}
         icon={<RobotIcon />}
-      />
+      /> */}
 
       {showModelSelector && (
         <Selector
@@ -1570,8 +1570,87 @@ function _Chat() {
     };
   }, [messages, chatStore, navigate]);
 
+  const [showDetectResult, setShowDetectResult] = useState(false);
+  const [detectResult, setDetectResult] = useState([]);
+
+  const detectMessage = (message: ChatMessage) => {
+    setShowDetectResult(true);
+    // pending
+    const score = [0.01, 0.01, 0.88, 0.76, 0.33, 0.02, 0.18];
+    setDetectResult(
+      message.split(" ").map((m, index) => {
+        return {
+          id: index,
+          message: m,
+          score: score[index],
+        };
+      }),
+    );
+  };
+
+  const getColor = (score: number) => {
+    if (score < 0.1) return `#eeeeee`;
+    return `rgba(255, 0, 0, ${score})`;
+  };
+
+  const DetectResultModal = (props: { onClose: () => void }) => {
+    return (
+      <div className="modal-mask">
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "1%",
+            borderRadius: "20px",
+            width: "40%",
+            fontSize: 20,
+          }}
+        >
+          <div style={{ float: "right" }}>
+            <IconButton icon={<CloseIcon />} bordered onClick={props.onClose} />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              // justifyContent: "center",
+              margin: "50px 0 10px 0",
+              flexWrap: "wrap",
+            }}
+          >
+            {detectResult.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    margin: "6px",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 25,
+                      fontWeight: "bold",
+                      backgroundColor: getColor(item.score),
+                    }}
+                  >
+                    {item.message}
+                  </div>
+                  <div style={{ fontSize: 15 }}>{item.score}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.chat} key={session.id}>
+      {showDetectResult && (
+        <DetectResultModal onClose={() => setShowDetectResult(false)} />
+      )}
       <div className="window-header" data-tauri-drag-region>
         {isMobileScreen && (
           <div className="window-actions">
@@ -1840,61 +1919,85 @@ function _Chat() {
                       ))}
                     </div>
                   )}
-                  <div className={styles["chat-message-item"]}>
-                    <Markdown
-                      key={message.streaming ? "loading" : "done"}
-                      content={getMessageTextContent(message)}
-                      loading={
-                        (message.preview || message.streaming) &&
-                        message.content.length === 0 &&
-                        !isUser
-                      }
-                      //   onContextMenu={(e) => onRightClick(e, message)} // hard to use
-                      onDoubleClickCapture={() => {
-                        if (!isMobileScreen) return;
-                        setUserInput(getMessageTextContent(message));
-                      }}
-                      fontSize={fontSize}
-                      fontFamily={fontFamily}
-                      parentRef={scrollRef}
-                      defaultShow={i >= messages.length - 6}
-                    />
-                    {getMessageImages(message).length == 1 && (
-                      <img
-                        className={styles["chat-message-item-image"]}
-                        src={getMessageImages(message)[0]}
-                        alt=""
-                      />
-                    )}
-                    {getMessageImages(message).length > 1 && (
-                      <div
-                        className={styles["chat-message-item-images"]}
-                        style={
-                          {
-                            "--image-count": getMessageImages(message).length,
-                          } as React.CSSProperties
+                  <div
+                    style={{
+                      display: "flex",
+                    }}
+                  >
+                    <div className={styles["chat-message-item"]}>
+                      <Markdown
+                        key={message.streaming ? "loading" : "done"}
+                        content={getMessageTextContent(message)}
+                        loading={
+                          (message.preview || message.streaming) &&
+                          message.content.length === 0 &&
+                          !isUser
                         }
+                        //   onContextMenu={(e) => onRightClick(e, message)} // hard to use
+                        onDoubleClickCapture={() => {
+                          if (!isMobileScreen) return;
+                          setUserInput(getMessageTextContent(message));
+                        }}
+                        fontSize={fontSize}
+                        fontFamily={fontFamily}
+                        parentRef={scrollRef}
+                        defaultShow={i >= messages.length - 6}
+                      />
+                      {getMessageImages(message).length == 1 && (
+                        <img
+                          className={styles["chat-message-item-image"]}
+                          src={getMessageImages(message)[0]}
+                          alt=""
+                        />
+                      )}
+                      {getMessageImages(message).length > 1 && (
+                        <div
+                          className={styles["chat-message-item-images"]}
+                          style={
+                            {
+                              "--image-count": getMessageImages(message).length,
+                            } as React.CSSProperties
+                          }
+                        >
+                          {getMessageImages(message).map((image, index) => {
+                            return (
+                              <img
+                                className={
+                                  styles["chat-message-item-image-multi"]
+                                }
+                                key={index}
+                                src={image}
+                                alt=""
+                              />
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                    {!isUser && i !== 0 && (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginLeft: 10,
+                          marginTop: 10,
+                        }}
                       >
-                        {getMessageImages(message).map((image, index) => {
-                          return (
-                            <img
-                              className={
-                                styles["chat-message-item-image-multi"]
-                              }
-                              key={index}
-                              src={image}
-                              alt=""
-                            />
-                          );
-                        })}
+                        <IconButton
+                          icon={<DetectIcon />}
+                          bordered
+                          onClick={() => detectMessage(message.content)}
+                        />
                       </div>
                     )}
                   </div>
-
                   <div className={styles["chat-message-action-date"]}>
                     {isContext
                       ? Locale.Chat.IsContext
                       : message.date.toLocaleString()}
+                    d
                   </div>
                 </div>
               </div>
@@ -1955,7 +2058,7 @@ function _Chat() {
                     padding: "1%",
                     borderRadius: "5%",
                     cursor: "pointer",
-                    fontSize: 29,
+                    fontSize: fontSize,
                     margin: "1%",
                     lineHeight: "280%",
                   }}

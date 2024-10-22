@@ -1,4 +1,4 @@
-import { getMessageTextContent, trimTopic } from "../utils";
+import { getMessageTextContent } from "../utils";
 
 import { indexedDBStorage } from "@/app/utils/indexedDB-storage";
 import { nanoid } from "nanoid";
@@ -313,6 +313,7 @@ export const useChatStore = createPersistStore(
         if (deletingLastSession) {
           nextIndex = 0;
           sessions.push(createEmptySession());
+          sessions[0].topic = "Llama-13B";
         }
 
         // for undo delete action
@@ -650,12 +651,12 @@ export const useChatStore = createPersistStore(
               providerName,
             },
             onFinish(message) {
-              if (!isValidMessage(message)) return;
-              get().updateCurrentSession(
-                (session) =>
-                  (session.topic =
-                    message.length > 0 ? trimTopic(message) : DEFAULT_TOPIC),
-              );
+              // if (!isValidMessage(message)) return;
+              // get().updateCurrentSession(
+              //   (session) =>
+              //     (session.topic =
+              //       message.length > 0 ? trimTopic(message) : DEFAULT_TOPIC),
+              // );
             },
           });
         }
