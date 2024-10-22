@@ -1,0 +1,2 @@
+WARNING:datasets.load:Using the latest cached version of the dataset since truthful_qa couldn't be found on the Hugging Face Hub
+WARNING:datasets.packaged_modules.cache.cache:Found the latest cached dataset configuration 'generation' at /home/chuokun_xu/.cache/huggingface/datasets/truthful_qa/generation/0.0.0/7c1c5c079d3679d0 (last modified on Wed Sep 18 12:14:43 2024).
