@@ -8,6 +8,7 @@ import React, {
   Fragment,
   RefObject,
 } from "react";
+import axios from "axios";
 
 import BrainIcon from "../icons/brain.svg";
 import RenameIcon from "../icons/rename.svg";
@@ -105,6 +106,7 @@ import { MultimodalContent } from "../client/api";
 import { ClientApi } from "../client/api";
 import { createTTSPlayer } from "../utils/audio";
 import { MsEdgeTTS, OUTPUT_FORMAT } from "../utils/ms_edge_tts";
+import { Loading } from "./home";
 
 import { isEmpty } from "lodash-es";
 
@@ -632,11 +634,10 @@ export function ChatActions(props: {
         <Selector
           defaultSelectedValue={`${currentModel}@${currentProviderName}`}
           items={models.map((m) => ({
-            title: `${m.displayName}${
-              m?.provider?.providerName
-                ? " (" + m?.provider?.providerName + ")"
-                : ""
-            }`,
+            title: `${m.displayName}${m?.provider?.providerName
+              ? " (" + m?.provider?.providerName + ")"
+              : ""
+              }`,
             value: `${m.name}@${m?.provider?.providerName}`,
           }))}
           onClose={() => setShowModelSelector(false)}
@@ -934,9 +935,9 @@ function _Chat() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isScrolledToBottom = scrollRef?.current
     ? Math.abs(
-        scrollRef.current.scrollHeight -
-          (scrollRef.current.scrollTop + scrollRef.current.clientHeight),
-      ) <= 1
+      scrollRef.current.scrollHeight -
+      (scrollRef.current.scrollTop + scrollRef.current.clientHeight),
+    ) <= 1
     : false;
   const { setAutoScroll, scrollDomToBottom } = useScrollToBottom(
     scrollRef,
@@ -1263,27 +1264,27 @@ function _Chat() {
       .concat(
         isLoading
           ? [
-              {
-                ...createMessage({
-                  role: "assistant",
-                  content: "……",
-                }),
-                preview: true,
-              },
-            ]
+            {
+              ...createMessage({
+                role: "assistant",
+                content: "……",
+              }),
+              preview: true,
+            },
+          ]
           : [],
       )
       .concat(
         userInput.length > 0 && config.sendPreviewBubble
           ? [
-              {
-                ...createMessage({
-                  role: "user",
-                  content: userInput,
-                }),
-                preview: true,
-              },
-            ]
+            {
+              ...createMessage({
+                role: "user",
+                content: userInput,
+              }),
+              preview: true,
+            },
+          ]
           : [],
       );
   }, [
@@ -1378,7 +1379,7 @@ function _Chat() {
         if (payload.key || payload.url) {
           showConfirm(
             Locale.URLCommand.Settings +
-              `\n${JSON.stringify(payload, null, 4)}`,
+            `\n${JSON.stringify(payload, null, 4)}`,
           ).then((res) => {
             if (!res) return;
             if (payload.key) {
@@ -1576,16 +1577,35 @@ function _Chat() {
   const detectMessage = (message: ChatMessage) => {
     setShowDetectResult(true);
     // pending
-    const score = [0.01, 0.01, 0.88, 0.76, 0.33, 0.02, 0.18];
-    setDetectResult(
-      message.split(" ").map((m, index) => {
-        return {
-          id: index,
-          message: m,
-          score: score[index],
-        };
-      }),
-    );
+    // const score = [0.01, 0.01, 0.88, 0.76, 0.33, 0.02, 0.18];
+    // setDetectResult(
+    //   message.split(" ").map((m, index) => {
+    //     return {
+    //       id: index,
+    //       message: m,
+    //       score: score[index],
+    //     };
+    //   }),
+    // );
+
+    axios
+      .post(
+        `http://localhost:8000/v1/completions`,
+        {
+          prompt: message,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
+      .then((res) => {
+        setDetectResult(JSON.parse(res.data.completion));
+      })
+      .catch((error) => {
+        console.error("error:", error);
+      });
   };
 
   const getColor = (score: number) => {
@@ -1611,35 +1631,41 @@ function _Chat() {
           <div
             style={{
               display: "flex",
-              // justifyContent: "center",
               margin: "50px 0 10px 0",
               flexWrap: "wrap",
+              alignContent: "center",
+              minHeight: "200px",
             }}
           >
-            {detectResult.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    margin: "6px",
-                  }}
-                >
+            {
+              detectResult.map((item, index) => {
+                return (
                   <div
+                    key={index}
                     style={{
-                      fontSize: 25,
-                      fontWeight: "bold",
-                      backgroundColor: getColor(item.score),
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      margin: "6px",
                     }}
                   >
-                    {item.message}
+                    <div
+                      style={{
+                        fontSize: 25,
+                        fontWeight: "bold",
+                        backgroundColor: getColor(item.score),
+                      }}
+                    >
+                      {item.message}
+                    </div>
+                    <div style={{ fontSize: 15 }}>{item.score}</div>
                   </div>
-                  <div style={{ fontSize: 15 }}>{item.score}</div>
-                </div>
-              );
-            })}
+                );
+              })
+            }
+            {
+              detectResult.length === 0 && (<Loading />)
+            }
           </div>
         </div>
       </div>
@@ -1649,7 +1675,10 @@ function _Chat() {
   return (
     <div className={styles.chat} key={session.id}>
       {showDetectResult && (
-        <DetectResultModal onClose={() => setShowDetectResult(false)} />
+        <DetectResultModal onClose={() => {
+          setShowDetectResult(false);
+          setDetectResult([]);
+        }} />
       )}
       <div className="window-header" data-tauri-drag-region>
         {isMobileScreen && (
@@ -1988,7 +2017,7 @@ function _Chat() {
                         <IconButton
                           icon={<DetectIcon />}
                           bordered
-                          onClick={() => detectMessage(message.content)}
+                          onClick={() => detectMessage(messages[i - 1].content)}
                         />
                       </div>
                     )}
@@ -2033,11 +2062,10 @@ function _Chat() {
           setUserInput={setUserInput}
         />
         <label
-          className={`${styles["chat-input-panel-inner"]} ${
-            attachImages.length != 0
-              ? styles["chat-input-panel-inner-attach"]
-              : ""
-          }`}
+          className={`${styles["chat-input-panel-inner"]} ${attachImages.length != 0
+            ? styles["chat-input-panel-inner-attach"]
+            : ""
+            }`}
           htmlFor="chat-input"
         >
           <div
