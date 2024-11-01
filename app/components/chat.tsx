@@ -1616,13 +1616,30 @@ function _Chat() {
             fontSize: 20,
           }}
         >
-          <div style={{ float: "right" }}>
-            <IconButton icon={<CloseIcon />} bordered onClick={props.onClose} />
-          </div>
           <div
             style={{
               display: "flex",
-              margin: "50px 0 10px 0",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ marginTop: 10, fontWeight: "bold" }}>幻觉检测</div>
+            <div>
+              <IconButton
+                icon={<CloseIcon />}
+                bordered
+                onClick={props.onClose}
+              />
+            </div>
+          </div>
+          {detectResult.length !== 0 && (
+            <p style={{ fontSize: 16 }}>
+              这是检测的结果，每个单词下面的数字是指由隐藏状态幻觉概率表示的缩放的单词级别的幻觉可能性，红色阴影区域表示对预测生成的文本是幻觉有重大贡献的词。
+            </p>
+          )}
+          <div
+            style={{
+              display: "flex",
+              margin: "5px 0",
               flexWrap: "wrap",
               alignContent: "center",
               minHeight: "150px",
