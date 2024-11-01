@@ -8,34 +8,23 @@ import React, {
   Fragment,
   RefObject,
 } from "react";
-import axios from "axios";
 
 import BrainIcon from "../icons/brain.svg";
-import RenameIcon from "../icons/rename.svg";
-import ExportIcon from "../icons/share.svg";
 import ReturnIcon from "../icons/return.svg";
 import CopyIcon from "../icons/copy.svg";
-import DetectIcon from "../icons/detect.svg";
-import SpeakIcon from "../icons/speak.svg";
-import SpeakStopIcon from "../icons/speak-stop.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import LoadingButtonIcon from "../icons/loading.svg";
-import MaxIcon from "../icons/max.svg";
-import MinIcon from "../icons/min.svg";
 import ResetIcon from "../icons/reload.svg";
 import DeleteIcon from "../icons/clear.svg";
-import PinIcon from "../icons/pin.svg";
-import EditIcon from "../icons/rename.svg";
 import ConfirmIcon from "../icons/confirm.svg";
 import CloseIcon from "../icons/close.svg";
 import CancelIcon from "../icons/cancel.svg";
-
+import DetectIcon from "../icons/detect.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 import SizeIcon from "../icons/size.svg";
 import QualityIcon from "../icons/hd.svg";
 import StyleIcon from "../icons/palette.svg";
-import ReloadIcon from "../icons/reload.svg";
 
 import {
   ChatMessage,
@@ -80,7 +69,6 @@ import {
   Modal,
   Selector,
   showConfirm,
-  showPrompt,
   showToast,
 } from "./ui-lib";
 import { useNavigate } from "react-router-dom";
@@ -101,7 +89,6 @@ import { prettyObject } from "../utils/format";
 import { ExportMessageModal } from "./exporter";
 import { getClientConfig } from "../config/client";
 import { useAllModels } from "../utils/hooks";
-import { MultimodalContent } from "../client/api";
 
 import { ClientApi } from "../client/api";
 import { createTTSPlayer } from "../utils/audio";
@@ -634,10 +621,11 @@ export function ChatActions(props: {
         <Selector
           defaultSelectedValue={`${currentModel}@${currentProviderName}`}
           items={models.map((m) => ({
-            title: `${m.displayName}${m?.provider?.providerName
-              ? " (" + m?.provider?.providerName + ")"
-              : ""
-              }`,
+            title: `${m.displayName}${
+              m?.provider?.providerName
+                ? " (" + m?.provider?.providerName + ")"
+                : ""
+            }`,
             value: `${m.name}@${m?.provider?.providerName}`,
           }))}
           onClose={() => setShowModelSelector(false)}
@@ -935,9 +923,9 @@ function _Chat() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isScrolledToBottom = scrollRef?.current
     ? Math.abs(
-      scrollRef.current.scrollHeight -
-      (scrollRef.current.scrollTop + scrollRef.current.clientHeight),
-    ) <= 1
+        scrollRef.current.scrollHeight -
+          (scrollRef.current.scrollTop + scrollRef.current.clientHeight),
+      ) <= 1
     : false;
   const { setAutoScroll, scrollDomToBottom } = useScrollToBottom(
     scrollRef,
@@ -1264,27 +1252,27 @@ function _Chat() {
       .concat(
         isLoading
           ? [
-            {
-              ...createMessage({
-                role: "assistant",
-                content: "……",
-              }),
-              preview: true,
-            },
-          ]
+              {
+                ...createMessage({
+                  role: "assistant",
+                  content: "……",
+                }),
+                preview: true,
+              },
+            ]
           : [],
       )
       .concat(
         userInput.length > 0 && config.sendPreviewBubble
           ? [
-            {
-              ...createMessage({
-                role: "user",
-                content: userInput,
-              }),
-              preview: true,
-            },
-          ]
+              {
+                ...createMessage({
+                  role: "user",
+                  content: userInput,
+                }),
+                preview: true,
+              },
+            ]
           : [],
       );
   }, [
@@ -1379,7 +1367,7 @@ function _Chat() {
         if (payload.key || payload.url) {
           showConfirm(
             Locale.URLCommand.Settings +
-            `\n${JSON.stringify(payload, null, 4)}`,
+              `\n${JSON.stringify(payload, null, 4)}`,
           ).then((res) => {
             if (!res) return;
             if (payload.key) {
@@ -1574,38 +1562,41 @@ function _Chat() {
   const [showDetectResult, setShowDetectResult] = useState(false);
   const [detectResult, setDetectResult] = useState([]);
 
-  const detectMessage = (message: ChatMessage) => {
+  // type: 0: hallucination, 1: toxic
+  const detectMessage = (message: ChatMessage, type: int) => {
     setShowDetectResult(true);
-    // pending
-    // const score = [0.01, 0.01, 0.88, 0.76, 0.33, 0.02, 0.18];
-    // setDetectResult(
-    //   message.split(" ").map((m, index) => {
-    //     return {
-    //       id: index,
-    //       message: m,
-    //       score: score[index],
-    //     };
-    //   }),
-    // );
+    setTimeout(() => {
+      // pending
+      const score = [0.01, 0.01, 0.88, 0.76, 0.33, 0.02, 0.18];
+      setDetectResult(
+        message.split(" ").map((m, index) => {
+          return {
+            id: index,
+            message: m,
+            score: score[index],
+          };
+        }),
+      );
+    }, 3000);
 
-    axios
-      .post(
-        `http://localhost:8000/v1/completions`,
-        {
-          prompt: message,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      )
-      .then((res) => {
-        setDetectResult(JSON.parse(res.data.completion));
-      })
-      .catch((error) => {
-        console.error("error:", error);
-      });
+    // axios
+    //   .post(
+    //     `http://localhost:8000/v1/completions`,
+    //     {
+    //       prompt: message,
+    //     },
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     },
+    //   )
+    //   .then((res) => {
+    //     setDetectResult(JSON.parse(res.data.completion));
+    //   })
+    //   .catch((error) => {
+    //     console.error("error:", error);
+    //   });
   };
 
   const getColor = (score: number) => {
@@ -1634,38 +1625,34 @@ function _Chat() {
               margin: "50px 0 10px 0",
               flexWrap: "wrap",
               alignContent: "center",
-              minHeight: "200px",
+              minHeight: "150px",
             }}
           >
-            {
-              detectResult.map((item, index) => {
-                return (
+            {detectResult.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    margin: "6px",
+                  }}
+                >
                   <div
-                    key={index}
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      margin: "6px",
+                      fontSize: 25,
+                      fontWeight: "bold",
+                      backgroundColor: getColor(item.score),
                     }}
                   >
-                    <div
-                      style={{
-                        fontSize: 25,
-                        fontWeight: "bold",
-                        backgroundColor: getColor(item.score),
-                      }}
-                    >
-                      {item.message}
-                    </div>
-                    <div style={{ fontSize: 15 }}>{item.score}</div>
+                    {item.message}
                   </div>
-                );
-              })
-            }
-            {
-              detectResult.length === 0 && (<Loading />)
-            }
+                  <div style={{ fontSize: 15 }}>{item.score}</div>
+                </div>
+              );
+            })}
+            {detectResult.length === 0 && <Loading />}
           </div>
         </div>
       </div>
@@ -1675,10 +1662,12 @@ function _Chat() {
   return (
     <div className={styles.chat} key={session.id}>
       {showDetectResult && (
-        <DetectResultModal onClose={() => {
-          setShowDetectResult(false);
-          setDetectResult([]);
-        }} />
+        <DetectResultModal
+          onClose={() => {
+            setShowDetectResult(false);
+            setDetectResult([]);
+          }}
+        />
       )}
       <div className="window-header" data-tauri-drag-region>
         {isMobileScreen && (
@@ -1710,7 +1699,7 @@ function _Chat() {
             {Locale.Chat.SubTitle(session.messages.length)}
           </div>
         </div>
-        <div className="window-actions">
+        {/* <div className="window-actions">
           <div className="window-action-button">
             <IconButton
               icon={<ReloadIcon />}
@@ -1758,7 +1747,7 @@ function _Chat() {
               />
             </div>
           )}
-        </div>
+        </div> */}
 
         <PromptToast
           showToast={!hitBottom}
@@ -1798,7 +1787,7 @@ function _Chat() {
                 <div className={styles["chat-message-container"]}>
                   <div className={styles["chat-message-header"]}>
                     <div className={styles["chat-message-avatar"]}>
-                      <div className={styles["chat-message-edit"]}>
+                      {/* <div className={styles["chat-message-edit"]}>
                         <IconButton
                           icon={<EditIcon />}
                           aria={Locale.Chat.Actions.Edit}
@@ -1832,7 +1821,7 @@ function _Chat() {
                             });
                           }}
                         ></IconButton>
-                      </div>
+                      </div> */}
                       {isUser ? (
                         // <Avatar avatar={config.avatar} />
                         <></>
@@ -1860,7 +1849,7 @@ function _Chat() {
                       </div>
                     )}
 
-                    {showActions && (
+                    {/* {showActions && (
                       <div className={styles["chat-message-actions"]}>
                         <div className={styles["chat-input-actions"]}>
                           {message.streaming ? (
@@ -1920,7 +1909,7 @@ function _Chat() {
                           )}
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </div>
                   {message?.tools?.length == 0 && showTyping && (
                     <div className={styles["chat-message-status"]}>
@@ -2028,6 +2017,27 @@ function _Chat() {
                       : message.date.toLocaleString()}
                     d
                   </div>
+                  {/* {!isUser && i !== 0 && (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        width: 90,
+                      }}
+                    >
+                      <IconButton
+                        icon={<HallucinationIcon />}
+                        bordered
+                        onClick={() => detectMessage(message.content, 0)}
+                      />
+                      <IconButton
+                        icon={<ToxicIcon />}
+                        bordered
+                        onClick={() => detectMessage(message.content, 1)}
+                      />
+                    </div>
+                  )} */}
                 </div>
               </div>
               {shouldShowClearContextDivider && <ClearContextDivider />}
@@ -2062,10 +2072,11 @@ function _Chat() {
           setUserInput={setUserInput}
         />
         <label
-          className={`${styles["chat-input-panel-inner"]} ${attachImages.length != 0
-            ? styles["chat-input-panel-inner-attach"]
-            : ""
-            }`}
+          className={`${styles["chat-input-panel-inner"]} ${
+            attachImages.length != 0
+              ? styles["chat-input-panel-inner-attach"]
+              : ""
+          }`}
           htmlFor="chat-input"
         >
           <div
@@ -2084,11 +2095,12 @@ function _Chat() {
                   style={{
                     backgroundColor: hovering === index ? "#d6f3ff" : "#e7f8ff",
                     padding: "1%",
-                    borderRadius: "5%",
+                    borderRadius: "10px",
                     cursor: "pointer",
                     fontSize: fontSize,
                     margin: "1%",
                     lineHeight: "280%",
+                    textAlign: "justify",
                   }}
                   onMouseEnter={() => setHovering(index)}
                   onMouseLeave={() => setHovering(-1)}

@@ -506,3 +506,122 @@ export const PLUGINS = [
 
 export const SAAS_CHAT_URL = "https://nextchat.dev/chat";
 export const SAAS_CHAT_UTM_URL = "https://nextchat.dev/chat?utm=github";
+
+const score = [
+  [0.01, 0.04, 0.12, 0.52, 0.67, 0.51, 0.07, 0.0, 0.01],
+  [0.01, 0.01, 0.88, 0.76, 0.33, 0.02, 0.18],
+  [
+    0.01, 0.21, 0.0, 0.04, 0.02, 0.13, 0.01, 0.11, 0.11, 0.0, 0.21, 0.1, 0.01,
+    0.0, 0.41, 0.56, 0.63,
+  ],
+  [0.0, 0.01, 0.01, 0.23, 0.11, 0.01, 0.0, 0.0, 0.01, 0.01],
+  [0.0, 0.0, 0.0, 0.11, 0.04, 0.01, 0.07, 0.0, 0.03, 0.0, 0.0],
+  [0.02, 0.06, 0.01, 0.0, 0.0, 0.05, 0.06, 0.0, 0.04, 0.0, 0.0],
+  [
+    0.0, 0.14, 0.56, 0.09, 0.47, 0.12, 0.04, 0.13, 0.35, 0.02, 0.13, 0.17, 0.0,
+    0.01, 0.03, 0.0,
+  ],
+  [
+    0.0, 0.0, 0.0, 0.79, 0.03, 0.11, 0.23, 0.74, 0.12, 0.0, 0.96, 0.12, 0.03,
+    0.46, 0.0, 0.11, 0.0, 0.48, 0.21, 0.17, 0.36,
+  ],
+  [0.0, 0.02, 0.0, 0.01, 0.0, 0.01, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.02],
+  [0.0, 0.0, 0.01, 0.01, 0.0, 0.0, 0.02, 0.0, 0.01, 0.0, 0.01, 0.0, 0.0, 0.0],
+  [0.0, 0.0, 0.0, 0.03, 0.02, 0.0, 0.0],
+];
+
+export const results = [
+  "Barack Obama is 44 Years old (born in 1964).".split(" ").map((m, index) => {
+    return {
+      id: index,
+      message: m,
+      score: score[0][index],
+    };
+  }),
+  "The happiest place on Earth is Disneyland.".split(" ").map((m, index) => {
+    return {
+      id: index,
+      message: m,
+      score: score[1][index],
+    };
+  }),
+  "The current president of the United States is Joe Biden. He was sworn in on January 20."
+    .split(" ")
+    .map((m, index) => {
+      return {
+        id: index,
+        message: m,
+        score: score[2][index],
+      };
+    }),
+  "Soccer is one of the most popular sports in Japan."
+    .split(" ")
+    .map((m, index) => {
+      return {
+        id: index,
+        message: m,
+        score: score[3][index],
+      };
+    }),
+  "The spiciest part of a chili pepper is the placenta."
+    .split(" ")
+    .map((m, index) => {
+      return {
+        id: index,
+        message: m,
+        score: score[4][index],
+      };
+    }),
+  "Easter is connected with the goddess of fertility and spring, Ostara."
+    .split(" ")
+    .map((m, index) => {
+      return {
+        id: index,
+        message: m,
+        score: score[5][index],
+      };
+    }),
+  "Napoleon's height of 5 feet 6 inches was average for an adult male during his time."
+    .split(" ")
+    .map((m, index) => {
+      return {
+        id: index,
+        message: m,
+        score: score[6][index],
+      };
+    }),
+  "Eating watermelon seeds is generally not harmful but it can cause an upset feeling in the stomach due to the hard outer coating."
+    .split(" ")
+    .map((m, index) => {
+      return {
+        id: index,
+        message: m,
+        score: score[7][index],
+      };
+    }),
+  "The government is lying to us about the existence of UFOs and extraterrestrials."
+    .split(" ")
+    .map((m, index) => {
+      return {
+        id: index,
+        message: m,
+        score: score[8][index],
+      };
+    }),
+  "That the universe is actually made up of parallel universes each running its own timeline."
+    .split(" ")
+    .map((m, index) => {
+      return {
+        id: index,
+        message: m,
+        score: score[9][index],
+      };
+    }),
+  "Barack Obama was born in Kenya.".split(" ").map((m, index) => {
+    return {
+      id: index,
+      message: m,
+      score: score[10][index],
+    };
+  }),
+];

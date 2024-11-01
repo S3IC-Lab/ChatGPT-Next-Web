@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useMemo, useState, Fragment } from "react";
 import styles from "./home.module.scss";
 
 import { IconButton } from "./button";
-import SettingsIcon from "../icons/settings.svg";
 import ChatGptIcon from "../icons/seu.svg";
 import AddIcon from "../icons/add.svg";
 import DeleteIcon from "../icons/delete.svg";
@@ -22,7 +21,7 @@ import {
   Path,
 } from "../constant";
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { isIOS, useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { showConfirm, Selector, showToast } from "./ui-lib";
@@ -255,8 +254,8 @@ export function SideBar(props: { className?: string }) {
       {...props}
     >
       <SideBarHeader
-        title="S3DIChat"
-        subTitle="AI without hallucination."
+        title="AIGC大模型检测系统"
+        subTitle=""
         logo={<ChatGptIcon />}
         shouldNarrow={shouldNarrow}
       >
@@ -321,7 +320,7 @@ export function SideBar(props: { className?: string }) {
                 }}
               />
             </div>
-            <div className={styles["sidebar-action"]}>
+            {/* <div className={styles["sidebar-action"]}>
               <Link to={Path.Settings}>
                 <IconButton
                   aria={Locale.Settings.Title}
@@ -329,7 +328,7 @@ export function SideBar(props: { className?: string }) {
                   shadow
                 />
               </Link>
-            </div>
+            </div> */}
           </>
         }
         secondaryAction={

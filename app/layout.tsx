@@ -10,7 +10,7 @@ import { GoogleTagManager, GoogleAnalytics } from "@next/third-parties/google";
 const serverConfig = getServerSideConfig();
 
 export const metadata: Metadata = {
-  title: "S3DIChat",
+  title: "AIGC大模型检测系统",
   description: "Give you answers without hallucination.",
   appleWebApp: {
     title: "S3DIChat",
