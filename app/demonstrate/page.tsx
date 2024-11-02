@@ -39,7 +39,7 @@ export default function Demonstrate() {
 
   return (
     <div>
-      <div style={{ position: "fixed", top: 20, left: 430, width: 900 }}>
+      <div style={{ position: "fixed", top: 20, left: 320, width: 1200 }}>
         <h1 style={{ width: "70%", textAlign: "center" }}>
           AIGC大模型检测系统
         </h1>
@@ -57,7 +57,7 @@ export default function Demonstrate() {
           Start
         </button>
       </div>
-      <div style={{ position: "relative", top: 170, right: 100 }}>
+      <div style={{ position: "relative", top: 40, right: 100 }}>
         <Result result={result} />
       </div>
     </div>
