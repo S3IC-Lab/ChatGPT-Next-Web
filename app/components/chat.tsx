@@ -1587,6 +1587,18 @@ function _Chat() {
   const [showDetectResult, setShowDetectResult] = useState(false);
   const [detectResult, setDetectResult] = useState([]);
 
+  useEffect(() => {
+    const items = document.querySelectorAll(".word");
+    items.forEach((item, index) => {
+      setTimeout(() => {
+        item.querySelector(".message").style.backgroundColor = getColor(
+          detectResult[index].score,
+        );
+        item.querySelector(".score").style.display = "block";
+      }, index * 400);
+    });
+  }, [detectResult]);
+
   const detectMessage = (message: ChatMessage, model: string, type: string) => {
     setShowDetectResult(true);
     setTimeout(() => {
@@ -1698,6 +1710,7 @@ function _Chat() {
               return (
                 <div
                   key={index}
+                  className="word"
                   style={{
                     display: "flex",
                     flexDirection: "column",
@@ -1706,15 +1719,26 @@ function _Chat() {
                   }}
                 >
                   <div
+                    className="message"
                     style={{
                       fontSize: 25,
                       fontWeight: "bold",
-                      backgroundColor: getColor(item.score),
+                      // backgroundColor: getColor(item.score),
+                      textAlign: "center",
                     }}
                   >
                     {item.message}
                   </div>
-                  <div style={{ fontSize: 15 }}>{item.score}</div>
+                  <div
+                    className="score"
+                    style={{
+                      fontSize: 15,
+                      textAlign: "center",
+                      display: "none",
+                    }}
+                  >
+                    {item.score}
+                  </div>
                 </div>
               );
             })}
