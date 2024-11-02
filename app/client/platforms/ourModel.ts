@@ -2,6 +2,7 @@
 import { ByteDance } from "@/app/constant";
 
 import { ChatOptions, LLMApi, LLMModel, SpeechOptions } from "../api";
+import { hallucinationAnswer } from "@/app/components/chat";
 
 export interface OpenAIListModelResponse {
   object: string;
@@ -34,7 +35,14 @@ export class OurModelApi implements LLMApi {
 
   async chat(options: ChatOptions) {
     setTimeout(() => {
-      options.onFinish("The happiest place on Earth is Disneyland.");
+      // pending
+      options.onFinish(
+        hallucinationAnswer.includes(
+          options.messages[options.messages.length - 1].content,
+        )
+          ? "The happiest place on Earth is Disneyland."
+          : "Make a mixed solution of concentrated nitric acid and concentrated sulfuric acid at a volume ratio of one to two. Be sure to mix slowly and coldly, stirring evenly. Soak medicinal absorbent cotton into the mixed solution.",
+      );
     }, 1000);
     // axios
     //   .post(

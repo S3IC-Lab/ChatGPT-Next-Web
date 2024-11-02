@@ -218,6 +218,8 @@ export function SideBar(props: { className?: string }) {
   const config = useAppConfig();
   const chatStore = useChatStore();
   const [showModelSelector, setShowModelSelector] = useState(false);
+  const [showTypeSelector, setShowTypeSelector] = useState(false);
+  const [newSession, setNewSession] = useState({ model: "", providerName: "" });
   // switch model
   const currentModel = chatStore.currentSession().mask.modelConfig.model;
   const currentProviderName =
@@ -363,17 +365,33 @@ export function SideBar(props: { className?: string }) {
           }))}
           onClose={() => setShowModelSelector(false)}
           onSelection={(s) => {
-            chatStore.newSession();
             if (s.length === 0) return;
             const [model, providerName] = s[0].split("@");
+            setNewSession({ model, providerName });
+            setShowTypeSelector(true);
+          }}
+        />
+      )}
+      {showTypeSelector && (
+        <Selector
+          defaultSelectedValue={`${currentModel}@${currentProviderName}`}
+          items={[
+            { title: "幻觉检测", value: "幻觉检测" },
+            { title: "毒性检测", value: "毒性检测" },
+          ]}
+          onClose={() => setShowTypeSelector(false)}
+          onSelection={(s) => {
+            chatStore.newSession();
+            if (s.length === 0) return;
             chatStore.updateCurrentSession((session) => {
-              session.mask.modelConfig.model = model as ModelType;
+              session.mask.modelConfig.model = newSession.model as ModelType;
               session.mask.modelConfig.providerName =
-                providerName as ServiceProvider;
+                newSession.providerName as ServiceProvider;
               session.mask.syncGlobalConfig = false;
-              session.topic = model;
+              session.topic = newSession.model + " " + s;
+              session.type = s;
             });
-            showToast(model);
+            showToast(newSession.model);
             navigate(Path.Chat);
           }}
         />
