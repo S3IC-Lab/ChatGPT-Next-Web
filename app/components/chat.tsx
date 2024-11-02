@@ -2077,7 +2077,10 @@ function _Chat() {
                               messages[i - 1].content,
                               messages[0].model ||
                                 session.mask.modelConfig.model,
-                              session.type,
+                              session.topic.slice(
+                                session.topic.length - 4,
+                                session.topic.length,
+                              ),
                             )
                           }
                         />
@@ -2160,7 +2163,10 @@ function _Chat() {
               overflowY: "scroll",
             }}
           >
-            {(session.type === "幻觉检测"
+            {(session.topic.slice(
+              session.topic.length - 4,
+              session.topic.length,
+            ) === "幻觉检测"
               ? hallucinationAnswer
               : toxicAnswer
             ).map((a, index) => {
