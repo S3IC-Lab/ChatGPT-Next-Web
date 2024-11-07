@@ -313,7 +313,7 @@ export const useChatStore = createPersistStore(
         if (deletingLastSession) {
           nextIndex = 0;
           sessions.push(createEmptySession());
-          sessions[0].topic = "Llama-13B 幻觉检测";
+          sessions[0].topic = "Llama2-13B 幻觉检测";
           sessions[0].type = "幻觉检测";
         }
 
