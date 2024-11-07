@@ -1598,6 +1598,26 @@ function _Chat() {
         item.querySelector(".score").style.display = "block";
       }, index * 400);
     });
+    const type = session.topic.slice(
+      session.topic.length - 4,
+      session.topic.length,
+    );
+    if (type === "幻觉检测") {
+      const result = detectResult.filter((item) => item.score >= 0.5);
+      const ratio = result.length / detectResult.length;
+      setTimeout(() => {
+        const p = document.querySelector(".final");
+        const div = document.createElement("div");
+        div.style.marginTop = "20px";
+        div.style.fontSize = "16px";
+        div.innerHTML = `根据大模型检测结果，该回答被判定为：<span style="color: ${
+          ratio >= 0.2 ? "red" : "green"
+        };">${ratio >= 0.2 ? "非事实" : "事实"}</span>，请${
+          ratio >= 0.2 ? "谨慎" : "放心"
+        }使用。`;
+        p?.appendChild(div);
+      }, 400 * items.length);
+    }
   }, [detectResult]);
 
   const detectMessage = (message: ChatMessage, model: string, type: string) => {
@@ -1623,11 +1643,6 @@ function _Chat() {
       //     }))
       //   return;
       // }
-      console.log({
-        mode: model,
-        index: toxicAnswer.indexOf(message).toString(),
-        type: type === "幻觉检测" ? "truthful" : "toxicity",
-      });
 
       axios
         .post(
@@ -1715,9 +1730,19 @@ function _Chat() {
               {session.type.slice(0, 2)}概率表示的缩放的单词级别的
               {session.type.slice(0, 2)}可能性，红色阴影区域表示对预测是
               {session.type.slice(0, 2)}有重大贡献的词。
+              <span
+                style={{
+                  display:
+                    session.type.slice(0, 2) === "幻觉" ? "none" : "inline",
+                  color: "red",
+                }}
+              >
+                (请注意标红语句)
+              </span>
             </p>
           )}
           <div
+            className="final"
             style={{
               display: "flex",
               margin: "5px 0",
@@ -1764,6 +1789,7 @@ function _Chat() {
             })}
             {detectResult.length === 0 && <Loading />}
           </div>
+          {/* <div className="final" style={{ fontSize: 16 }}>根据大模型检测结果，该回答被判定为：<span style={{ color: "red" }}>{finalResult ? "事实" : "非事实"}</span>，请谨慎使用。</div> */}
         </div>
       </div>
     );
