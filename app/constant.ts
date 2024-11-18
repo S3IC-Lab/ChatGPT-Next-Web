@@ -271,7 +271,7 @@ export const DEFAULT_TTS_VOICES = [
   "shimmer",
 ];
 
-const ourModels = ["Alpaca-13B", "Vicuna-13B", "Llama2-13B"];
+const ourModels = ["Llama2-13B", "Alpaca-13B", "Vicuna-13B"];
 
 const openaiModels = [
   "gpt-3.5-turbo",

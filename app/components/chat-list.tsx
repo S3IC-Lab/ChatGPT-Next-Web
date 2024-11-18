@@ -157,7 +157,9 @@ export function ChatList(props: { narrow?: boolean }) {
                     (!props.narrow && !isMobileScreen) ||
                     (await showConfirm(Locale.Home.DeleteChat))
                   ) {
-                    chatStore.deleteSession(i);
+                    if (sessions.length === 1)
+                      alert("暂不能删除最后一个会话！");
+                    else chatStore.deleteSession(i);
                   }
                 }}
                 narrow={props.narrow}

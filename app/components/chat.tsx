@@ -1284,9 +1284,9 @@ function _Chat() {
     session.messages.at(0)?.content !== BOT_HELLO.content
   ) {
     const copiedHello = Object.assign({}, BOT_HELLO);
-    if (!accessStore.isAuthorized()) {
-      copiedHello.content = Locale.Error.Unauthorized;
-    }
+    // if (!accessStore.isAuthorized()) {
+    //   copiedHello.content = Locale.Error.Unauthorized;
+    // }
     context.push(copiedHello);
   }
 
@@ -1666,7 +1666,7 @@ function _Chat() {
 
       axios
         .post(
-          `http://localhost:8000/model`,
+          `http://10.65.8.96:8000/model`,
           {
             mode: model,
             index: (type === "幻觉检测" ? hallucinationAnswer : toxicAnswer)

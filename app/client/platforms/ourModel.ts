@@ -40,7 +40,7 @@ export class OurModelApi implements LLMApi {
       const isHallucination = hallucinationAnswer.includes(qustion);
       axios
         .post(
-          `http://127.0.0.1:8000/text`,
+          `http://10.65.8.96:8000/text`,
           {
             mode: options.config.model,
             index: (isHallucination ? hallucinationAnswer : toxicAnswer)

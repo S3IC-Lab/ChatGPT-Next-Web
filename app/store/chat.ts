@@ -188,8 +188,13 @@ function fillTemplateWith(input: string, modelConfig: ModelConfig) {
   return output;
 }
 
+const sessions = [];
+sessions.push(createEmptySession());
+sessions[0].topic = "Llama2-13B 幻觉检测";
+sessions[0].type = "幻觉检测";
+
 const DEFAULT_CHAT_STATE = {
-  sessions: [createEmptySession()],
+  sessions,
   currentSessionIndex: 0,
   lastInput: "",
 };
@@ -312,6 +317,7 @@ export const useChatStore = createPersistStore(
 
         if (deletingLastSession) {
           nextIndex = 0;
+          // 设置弹窗
           sessions.push(createEmptySession());
           sessions[0].topic = "Llama2-13B 幻觉检测";
           sessions[0].type = "幻觉检测";
