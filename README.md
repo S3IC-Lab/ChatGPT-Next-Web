@@ -1,2 +1,1 @@
-# S3DI chat
-TODO
+# S3IC 幻觉检测系统
